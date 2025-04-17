@@ -31,15 +31,21 @@ void mainLoop() {
 
   if(!selectionActive) {
     if (uptime - last1000ms > 1000) {
+      while(i2cBusy){}
+      i2cBusy = 1;
       last1000ms = uptime;
       updateTime();
+      i2cBusy = 0;
     }
+  }
   
-    if (uptime - last100ms > 100) {
-      last100ms = uptime;
-      clearScreen();
-      drawMainScreen();
-      applyScreenBuffer();
-    }
+  if (uptime - last100ms > 100) {
+    while(i2cBusy){}
+    i2cBusy = 1;
+    last100ms = uptime;
+    clearScreen();
+    drawMainScreen();
+    applyScreenBuffer();
+    i2cBusy = 0;
   }
 }

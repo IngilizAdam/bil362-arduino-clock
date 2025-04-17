@@ -28,23 +28,11 @@ void initRotaryEncoder() {
 void increasePos() {
   pos++;
   updateSelection(+1);
-
-  if (selectionActive){
-    clearScreen();
-    drawMainScreen();
-    applyScreenBuffer();
-  }
 }
 
 void decreasePos() {
   pos--;
   updateSelection(-1);
-
-  if (selectionActive){
-    clearScreen();
-    drawMainScreen();
-    applyScreenBuffer();
-  }
 }
 
 void pressButton() {
@@ -58,9 +46,12 @@ void pressButton() {
     // Play a melody or sound to indicate selection is inactive
     playMelody(n2, tone2, dur2);
 
+    while(i2cBusy){}
+    i2cBusy = 1;
     _delay_ms(500); // Debounce delay
     writeTimeToRTC();
     _delay_ms(500); // Debounce delay
+    i2cBusy = 0;
     
     selectionActive = 0;
   }
@@ -71,6 +62,8 @@ void pressButton() {
 
     _delay_ms(500); // Debounce delay
   }
+
+  playMelody(n2, tone2, dur2);
 
   sei();
 }

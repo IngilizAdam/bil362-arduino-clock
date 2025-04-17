@@ -20,9 +20,6 @@ void playMelody(uint8_t n, uint8_t tones[], uint8_t durs[]) {
   TCCR1B = (1 << WGM12);  // CTC mode
   TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10)); // Stop timer for now
 
-  //uint8_t tones[15] = {5,5,4,7,6,4,1,7,4,9,7,5,7,9,9};
-  //uint8_t durs[15]  = {4,4,4,4,4,4,4,4,4,4,4,4,6,2,30};
-
   for (uint8_t t = 0; t < (n-1); t++) {
     tone(tones[t], durs[t]);
   }

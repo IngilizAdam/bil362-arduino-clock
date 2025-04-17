@@ -3,6 +3,8 @@
 #include <avr/io.h>
 #include <stdlib.h>
 
+extern uint8_t i2cBusy;
+
 void startI2C();
 
 void stopI2C();

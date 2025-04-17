@@ -1,5 +1,7 @@
 #include "i2c.h"
 
+uint8_t i2cBusy = 0;
+
 void startI2C()
 {
   TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT); // Enable I2C & Start Cond. & Interrupt flag
