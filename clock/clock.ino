@@ -7,8 +7,11 @@
 void setup() {
   Serial.begin(9600);
 
+  u8g2.begin();
+
   initScreen();
   playMelody();
+  drawMainScreen();
 }
 
 void loop() {
