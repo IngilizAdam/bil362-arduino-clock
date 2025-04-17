@@ -4,9 +4,11 @@
 #include <stdlib.h>
 #include <util/delay.h>
 #include "oled.h"
+#include "buzzer.h"
 
 extern uint8_t pos;
 extern uint8_t switchPressed;
+extern uint8_t selectionActive;
 
 void initRotaryEncoder();
 void increasePos();

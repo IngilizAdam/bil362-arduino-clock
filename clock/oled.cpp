@@ -95,13 +95,33 @@ void drawAlarmScreen() {
 
 void updateSelection(int direction) {
   if(direction > 0) {
-    if(selectedItem < FINAL) {
-      selectedItem = static_cast<MENU_ITEM>(selectedItem + 1);
+    if (!selectionActive) {
+      if(selectedItem < FINAL) {
+        selectedItem = static_cast<MENU_ITEM>(selectedItem + 1);
+      }
+    }
+    else {
+      if(selectedItem == HOUR) {
+        hour++;
+        if(hour > 23) {
+          hour = 0;
+        }
+      }
     }
   }
   else if(direction < 0) {
-    if(selectedItem > BLANK) {
-      selectedItem = static_cast<MENU_ITEM>(selectedItem - 1);
+    if (!selectionActive) {
+      if(selectedItem > BLANK) {
+        selectedItem = static_cast<MENU_ITEM>(selectedItem - 1);
+      }
+    }
+    else {
+      if(selectedItem == HOUR) {
+        hour--;
+        if(hour < 0) {
+          hour = 23;
+        }
+      }
     }
   }
 }

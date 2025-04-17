@@ -2,9 +2,12 @@
 
 uint8_t pos;
 uint8_t switchPressed;
+uint8_t selectionActive;
 
 void initRotaryEncoder() {
   pos = 0;
+  switchPressed = 0;
+  selectionActive = 0;
 
   // setup ports
   DDRD &= ~((1 << PD2) | (1 << PD3) | (1 << PD4)); // PD2 (A), PD3 (B), PD4 (SW) as input
@@ -25,15 +28,51 @@ void initRotaryEncoder() {
 void increasePos() {
   pos++;
   updateSelection(+1);
+
+  if (selectionActive){
+    clearScreen();
+    drawMainScreen();
+    applyScreenBuffer();
+  }
 }
 
 void decreasePos() {
   pos--;
   updateSelection(-1);
+
+  if (selectionActive){
+    clearScreen();
+    drawMainScreen();
+    applyScreenBuffer();
+  }
 }
 
 void pressButton() {
+  cli();
+
   switchPressed = true;
+
+  playMelody(n2, tone2, dur2);
+
+  if(selectionActive) {
+    // Play a melody or sound to indicate selection is inactive
+    playMelody(n2, tone2, dur2);
+
+    _delay_ms(500); // Debounce delay
+    writeTimeToRTC();
+    _delay_ms(500); // Debounce delay
+    
+    selectionActive = 0;
+  }
+  else {
+    selectionActive = 1;
+    // Play a melody or sound to indicate selection is active
+    playMelody(n3, tone3, dur3);
+
+    _delay_ms(500); // Debounce delay
+  }
+
+  sei();
 }
 
 void releaseButton() {

@@ -13,4 +13,6 @@ extern uint8_t month;
 extern uint16_t year;
 
 void updateTime();
-uint8_t bcd_to_decimal(uint8_t bcd);
+void writeTimeToRTC();
+uint8_t bcdToDecimal(uint8_t bcd);
+uint8_t decToBcd(uint8_t val);

@@ -6,18 +6,20 @@
 #include "rotary_encoder.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "rotary_encoder.h"
 
 void mainLoop();
 
 volatile unsigned long uptime = 0;
 volatile unsigned long last100ms = 0;
 volatile unsigned long last1000ms = 0;
+uint8_t adjustMode = 0;
 
 void setup() {
   initRotaryEncoder();
   initScreen();
 
-  playMelody();
+  playMelody(n1, tone1, dur1);
 
   while(1){
     mainLoop();
@@ -27,15 +29,17 @@ void setup() {
 void mainLoop() {
   uptime = millis();
 
-  if (uptime - last1000ms > 1000) {
-    last1000ms = uptime;
-    updateTime();
-  }
-
-  if (uptime - last100ms > 100) {
-    last100ms = uptime;
-    clearScreen();
-    drawMainScreen();
-    applyScreenBuffer();
+  if(!selectionActive) {
+    if (uptime - last1000ms > 1000) {
+      last1000ms = uptime;
+      updateTime();
+    }
+  
+    if (uptime - last100ms > 100) {
+      last100ms = uptime;
+      clearScreen();
+      drawMainScreen();
+      applyScreenBuffer();
+    }
   }
 }
