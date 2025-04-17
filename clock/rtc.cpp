@@ -9,6 +9,11 @@ uint8_t month = 0;
 uint16_t year = 0;
 
 void updateTime() {
+  // Initialize I2C as master
+  TWSR = 0;  // Prescaler value = 1
+  TWBR = 72; // Set bit rate register (for 100kHz at 16MHz CPU)
+  TWCR = (1 << TWEN);  // Enable TWI (I2C)
+  
   startI2C();
   sendI2C((I2C_DS3231_ADDRESS << 1) & 0xFE);
   sendI2C(0x00);
