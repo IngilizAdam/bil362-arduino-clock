@@ -5,8 +5,12 @@
 #define F_CPU 16000000UL
 
 enum MENU_ITEM{
-  BLANK,
+  BLANK = 0,
   HOUR,
   MINUTE,
-  SECOND
+  SECOND,
+  DAY,
+  MONTH,
+  YEAR,
+  FINAL
 };

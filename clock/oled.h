@@ -13,4 +13,4 @@ void clearScreen();
 void applyScreenBuffer();
 void drawMainScreen();
 void drawAlarmScreen();
-void updateSelection(uint8_t direction);
+void updateSelection(int direction);

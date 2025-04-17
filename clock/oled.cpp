@@ -24,35 +24,84 @@ void applyScreenBuffer() {
 }
 
 void drawMainScreen() {
+  // --- TIME ---
   char timeStr[9];
   snprintf(timeStr, sizeof(timeStr), "%02d:%02d:%02d", hour, minute, second);
-  u8g2.setFont(u8g2_font_ncenB12_tr);
-  uint8_t timeStrWidth = u8g2.getStrWidth(timeStr);
-  uint8_t timeStrX = (128 - timeStrWidth) / 2;
-  uint8_t timeStrY = (64 + u8g2.getAscent()) / 2;
-  u8g2.drawStr(timeStrX, timeStrY, timeStr);
 
-  char dateStr[11];
+  u8g2.setFont(u8g2_font_ncenB12_tr);
+  uint8_t timeY = 20;
+  uint8_t timeX = (128 - u8g2.getStrWidth(timeStr)) / 2;
+  u8g2.drawStr(timeX, timeY, timeStr);
+
+  // Draw boxes for selected time item
+  int partWidth = u8g2.getStrWidth("00");
+  int colonWidth = u8g2.getStrWidth(":");
+
+  int hourX = timeX;
+  int minX = hourX + partWidth + colonWidth;
+  int secX = minX + partWidth + colonWidth;
+
+  int boxY = timeY - u8g2.getAscent() - 2;
+  int boxHeight = u8g2.getAscent() + 4;
+
+  switch (selectedItem) {
+    case HOUR:
+      u8g2.drawRFrame(hourX - 2, boxY, partWidth + 4, boxHeight, 2);
+      break;
+    case MINUTE:
+      u8g2.drawRFrame(minX - 2, boxY, partWidth + 4, boxHeight, 2);
+      break;
+    case SECOND:
+      u8g2.drawRFrame(secX - 2, boxY, partWidth + 4, boxHeight, 2);
+      break;
+  }
+
+  // --- DATE ---
   u8g2.setFont(u8g2_font_ncenB08_tr);
+  char dateStr[20];
   snprintf(dateStr, sizeof(dateStr), "%02d/%02d/%04d", date, month, year);
-  uint8_t dateStrWidth = u8g2.getStrWidth(dateStr);
-  uint8_t dateStrX = (128 - dateStrWidth) / 2;
-  uint8_t dateStrY = 64 - u8g2.getAscent();
-  u8g2.drawStr(dateStrX, dateStrY, dateStr);
+
+  uint8_t dateY = 50;
+  uint8_t dateX = (128 - u8g2.getStrWidth(dateStr)) / 2;
+  u8g2.drawStr(dateX, dateY, dateStr);
+
+  // Box for selected date part
+  partWidth = u8g2.getStrWidth("00");
+  colonWidth = u8g2.getStrWidth("/");
+
+  int dayX = dateX;
+  int monthX = dayX + partWidth + colonWidth;
+  int yearX = monthX + partWidth + colonWidth;
+
+  boxY = dateY - u8g2.getAscent() - 2;
+  boxHeight = u8g2.getAscent() + 4;
+
+  switch (selectedItem) {
+    case DAY:
+      u8g2.drawRFrame(dayX - 2, boxY, partWidth + 4, boxHeight, 2);
+      break;
+    case MONTH:
+      u8g2.drawRFrame(monthX - 2, boxY, partWidth + 4, boxHeight, 2);
+      break;
+    case YEAR:
+      u8g2.drawRFrame(yearX - 2, boxY, u8g2.getStrWidth("0000") + 4, boxHeight, 2);
+      break;
+  }
 }
 
 void drawAlarmScreen() {
 
 }
 
-void updateSelection(uint8_t direction) {
-  u8g2.clearBuffer();
-  drawMainScreen();
-
+void updateSelection(int direction) {
   if(direction > 0) {
-    selectedItem = static_cast<MENU_ITEM>(selectedItem + 1);
+    if(selectedItem < FINAL) {
+      selectedItem = static_cast<MENU_ITEM>(selectedItem + 1);
+    }
   }
-  else {
-    selectedItem = static_cast<MENU_ITEM>(selectedItem - 1);
+  else if(direction < 0) {
+    if(selectedItem > BLANK) {
+      selectedItem = static_cast<MENU_ITEM>(selectedItem - 1);
+    }
   }
 }
