@@ -29,6 +29,15 @@ void setup() {
 void mainLoop() {
   uptime = millis();
 
+  if(changeActive) {
+    while(i2cBusy){}
+    i2cBusy = 1;
+    writeTimeToRTC();
+    changeActive = 0;
+    selectionActive = 0;
+    i2cBusy = 0;
+  }
+
   if(!selectionActive) {
     if (uptime - last1000ms > 1000) {
       while(i2cBusy){}
@@ -36,6 +45,10 @@ void mainLoop() {
       last1000ms = uptime;
       updateTime();
       i2cBusy = 0;
+
+      if(alarmHour == hour && alarmMinute == minute) {
+        playMelody(selectedN, selectedTone, selectedDur);
+      }
     }
   }
   
@@ -44,7 +57,7 @@ void mainLoop() {
     i2cBusy = 1;
     last100ms = uptime;
     clearScreen();
-    drawMainScreen();
+    drawScreen();
     applyScreenBuffer();
     i2cBusy = 0;
   }

@@ -17,5 +17,17 @@ extern uint8_t n3;
 extern uint8_t tone3[];
 extern uint8_t dur3[];
 
+extern uint8_t n4;
+extern uint8_t tone4[];
+extern uint8_t dur4[];
+
+extern uint8_t n5;
+extern uint8_t tone5[];
+extern uint8_t dur5[];
+
+extern uint8_t selectedN;
+extern uint8_t *selectedTone;
+extern uint8_t *selectedDur;
+
 void playMelody(uint8_t n, uint8_t tones[], uint8_t durs[]);
 void tone(uint8_t num, uint8_t dur);

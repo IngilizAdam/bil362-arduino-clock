@@ -9,6 +9,7 @@
 extern uint8_t pos;
 extern uint8_t switchPressed;
 extern uint8_t selectionActive;
+extern uint8_t changeActive;
 
 void initRotaryEncoder();
 void increasePos();

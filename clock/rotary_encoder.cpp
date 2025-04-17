@@ -3,11 +3,13 @@
 uint8_t pos;
 uint8_t switchPressed;
 uint8_t selectionActive;
+uint8_t changeActive;
 
 void initRotaryEncoder() {
   pos = 0;
   switchPressed = 0;
   selectionActive = 0;
+  changeActive = 0;
 
   // setup ports
   DDRD &= ~((1 << PD2) | (1 << PD3) | (1 << PD4)); // PD2 (A), PD3 (B), PD4 (SW) as input
@@ -40,30 +42,51 @@ void pressButton() {
 
   switchPressed = true;
 
-  playMelody(n2, tone2, dur2);
-
-  if(selectionActive) {
-    // Play a melody or sound to indicate selection is inactive
-    playMelody(n2, tone2, dur2);
-
-    while(i2cBusy){}
-    i2cBusy = 1;
-    _delay_ms(500); // Debounce delay
-    writeTimeToRTC();
-    _delay_ms(500); // Debounce delay
-    i2cBusy = 0;
-    
-    selectionActive = 0;
+  if(selectedItem == ALARM_TONE_1) {
+    selectedN = n1;
+    selectedTone = tone1;
+    selectedDur = dur1;
+    playMelody(n1, tone1, dur1);
+  }
+  else if(selectedItem == ALARM_TONE_2) {
+    selectedN = n4;
+    selectedTone = tone4;
+    selectedDur = dur4;
+    playMelody(n4, tone4, dur4);
+  }
+  else if(selectedItem == ALARM_TONE_3) {
+    selectedN = n5;
+    selectedTone = tone5;
+    selectedDur = dur5;
+    playMelody(n5, tone5, dur5);
   }
   else {
-    selectionActive = 1;
-    // Play a melody or sound to indicate selection is active
-    playMelody(n3, tone3, dur3);
+    playMelody(n2, tone2, dur2);
 
-    _delay_ms(500); // Debounce delay
+    if(selectionActive) {
+      // Play a melody or sound to indicate selection is inactive
+      playMelody(n2, tone2, dur2);
+
+      //while(i2cBusy){}
+      //i2cBusy = 1;
+      //_delay_ms(500); // Debounce delay
+      //writeTimeToRTC();
+      changeActive = 1;
+      //_delay_ms(500); // Debounce delay
+      //i2cBusy = 0;
+      
+      //selectionActive = 0;
+    }
+    else {
+      selectionActive = 1;
+      // Play a melody or sound to indicate selection is active
+      playMelody(n3, tone3, dur3);
+
+      _delay_ms(500); // Debounce delay
+    }
+
+    playMelody(n2, tone2, dur2);
   }
-
-  playMelody(n2, tone2, dur2);
 
   sei();
 }
@@ -73,6 +96,8 @@ void releaseButton() {
 }
 
 ISR(INT0_vect) {
+  cli();
+
   // Rotary A changed
   if (PIND & (1 << PD2)) {
     if (PIND & (1 << PD3)) {
@@ -87,6 +112,9 @@ ISR(INT0_vect) {
       increasePos();
     }
   }
+
+  _delay_ms(50);
+  sei();
 }
 
 ISR(INT1_vect) {

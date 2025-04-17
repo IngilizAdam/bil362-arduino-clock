@@ -12,6 +12,26 @@ uint8_t n3 = 3;
 uint8_t tone3[] = {2, 1, 2};
 uint8_t dur3[]  = {10, 5, 10};
 
+uint8_t n4 = 18;
+uint8_t tone4[] = {
+  3, 5, 6, 8, 9, 11, 13, 11, 9, 8, 6, 5, 3, 2, 3, 5, 6, 8
+};
+uint8_t dur4[]  = {
+  4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 20
+};
+
+uint8_t n5 = 18;
+uint8_t tone5[] = {
+  8, 8, 6, 6, 5, 5, 6, 6, 8, 10, 8, 6, 5, 3, 5, 6, 8, 8
+};
+uint8_t dur5[]  = {
+  2, 2, 2, 2, 4, 4, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 30
+};
+
+uint8_t selectedN = n1;
+uint8_t *selectedTone = tone1;
+uint8_t *selectedDur = dur1;
+
 void playMelody(uint8_t n, uint8_t tones[], uint8_t durs[]) {
   DDRB |= (1 << DDB1); // PB1 (OC1A) output
 
@@ -24,7 +44,6 @@ void playMelody(uint8_t n, uint8_t tones[], uint8_t durs[]) {
     tone(tones[t], durs[t]);
   }
 }
-
 
 void tone(uint8_t num, uint8_t dur) {
   // Convert note number to frequency (approximate formula for equal temperament)

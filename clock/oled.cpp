@@ -90,7 +90,65 @@ void drawMainScreen() {
 }
 
 void drawAlarmScreen() {
+  // --- Alarm Time ---
+  char timeStr[6];
+  snprintf(timeStr, sizeof(timeStr), "%02d:%02d", alarmHour, alarmMinute);
 
+  u8g2.setFont(u8g2_font_ncenB14_tr);
+  uint8_t timeX = (128 - u8g2.getStrWidth(timeStr)) / 2;
+  uint8_t timeY = 24;
+  u8g2.drawStr(timeX, timeY, timeStr);
+
+  // Box around hour
+  if (selectedItem == ALARM_HOUR) {
+    char hourStr[3];
+    snprintf(hourStr, sizeof(hourStr), "%02d", alarmHour);
+    uint8_t hourX = timeX;
+    uint8_t hourW = u8g2.getStrWidth(hourStr);
+    u8g2.drawRFrame(hourX - 2, timeY - 14, hourW + 4, 16, 2);
+  }
+
+  // Box around minute
+  if (selectedItem == ALARM_MINUTE) {
+    char minStr[3];
+    snprintf(minStr, sizeof(minStr), "%02d", alarmMinute);
+    uint8_t minX = timeX + u8g2.getStrWidth("00:");
+    uint8_t minW = u8g2.getStrWidth(minStr);
+    u8g2.drawRFrame(minX - 2, timeY - 14, minW + 4, 16, 2);
+  }
+
+  // --- Tone Options ---
+  u8g2.setFont(u8g2_font_6x10_tr);
+  char* tone1 = "Tone 1";
+  char* tone2 = "Tone 2";
+  char* tone3 = "Tone 3";
+  uint8_t toneY = 35;
+  uint8_t toneX = (128 - u8g2.getStrWidth(tone1)) / 2;
+  u8g2.drawStr(toneX, toneY, tone1);
+  if(selectedItem == ALARM_TONE_1) {
+    u8g2.drawRFrame(toneX - 2, toneY - 10, u8g2.getStrWidth(tone1) + 4, 16, 2);
+  }
+  toneY += 10;
+  toneX = (128 - u8g2.getStrWidth(tone2)) / 2;
+  u8g2.drawStr(toneX, toneY, tone2);
+  if(selectedItem == ALARM_TONE_2) {
+    u8g2.drawRFrame(toneX - 2, toneY - 10, u8g2.getStrWidth(tone2) + 4, 16, 2);
+  }
+  toneY += 10;
+  toneX = (128 - u8g2.getStrWidth(tone3)) / 2;
+  u8g2.drawStr(toneX, toneY, tone3);
+  if(selectedItem == ALARM_TONE_3) {
+    u8g2.drawRFrame(toneX - 2, toneY - 10, u8g2.getStrWidth(tone3) + 4, 16, 2);
+  }
+}
+
+void drawScreen() {
+  if(selectedItem < ALARM) {
+    drawMainScreen();
+  }
+  else {
+    drawAlarmScreen();
+  }
 }
 
 void updateSelection(int direction) {
@@ -107,6 +165,48 @@ void updateSelection(int direction) {
           hour = 0;
         }
       }
+      else if(selectedItem == MINUTE) {
+        minute++;
+        if(minute > 59) {
+          minute = 0;
+        }
+      }
+      else if(selectedItem == SECOND) {
+        second++;
+        if(second > 59) {
+          second = 0;
+        }
+      }
+      else if(selectedItem == DAY) {
+        date++;
+        if(date > 31) {
+          date = 1;
+        }
+      }
+      else if(selectedItem == MONTH) {
+        month++;
+        if(month > 12) {
+          month = 1;
+        }
+      }
+      else if(selectedItem == YEAR) {
+        year++;
+        if(year > 2099) {
+          year = 1900;
+        }
+      }
+      else if(selectedItem == ALARM_HOUR) {
+        alarmHour++;
+        if(alarmHour > 23) {
+          alarmHour = 0;
+        }
+      }
+      else if(selectedItem == ALARM_MINUTE) {
+        alarmMinute++;
+        if(alarmMinute > 59) {
+          alarmMinute = 0;
+        }
+      }
     }
   }
   else if(direction < 0) {
@@ -120,6 +220,48 @@ void updateSelection(int direction) {
         hour--;
         if(hour < 0) {
           hour = 23;
+        }
+      }
+      else if(selectedItem == MINUTE) {
+        minute--;
+        if(minute < 0) {
+          minute = 59;
+        }
+      }
+      else if(selectedItem == SECOND) {
+        second--;
+        if(second < 0) {
+          second = 59;
+        }
+      }
+      else if(selectedItem == DAY) {
+        date--;
+        if(date < 1) {
+          date = 31;
+        }
+      }
+      else if(selectedItem == MONTH) {
+        month--;
+        if(month < 1) {
+          month = 12;
+        }
+      }
+      else if(selectedItem == YEAR) {
+        year--;
+        if(year < 1900) {
+          year = 2099;
+        }
+      }
+      else if(selectedItem == ALARM_HOUR) {
+        alarmHour--;
+        if(alarmHour < 0) {
+          alarmHour = 23;
+        }
+      }
+      else if(selectedItem == ALARM_MINUTE) {
+        alarmMinute--;
+        if(alarmMinute < 0) {
+          alarmMinute = 59;
         }
       }
     }

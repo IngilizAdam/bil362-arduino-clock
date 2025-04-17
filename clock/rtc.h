@@ -4,13 +4,16 @@
 #include "i2c.h"
 #include "define.h"
 
-extern uint8_t second;
-extern uint8_t minute;
-extern uint8_t hour;
-extern uint8_t day;
-extern uint8_t date;
-extern uint8_t month;
-extern uint16_t year;
+extern int second;
+extern int minute;
+extern int hour;
+extern int day;
+extern int date;
+extern int month;
+extern int year;
+
+extern int alarmHour;
+extern int alarmMinute;
 
 void updateTime();
 void writeTimeToRTC();

@@ -1,12 +1,15 @@
 #include "rtc.h"
 
-uint8_t second = 0;
-uint8_t minute = 0;
-uint8_t hour = 0;
-uint8_t day = 0;
-uint8_t date = 0;
-uint8_t month = 0;
-uint16_t year = 0;
+int second = 0;
+int minute = 0;
+int hour = 0;
+int day = 0;
+int date = 0;
+int month = 0;
+int year = 0;
+
+int alarmHour = 0;
+int alarmMinute = 0;
 
 void updateTime() {
   // Initialize I2C as master
@@ -37,15 +40,16 @@ void updateTime() {
   hour = bcdToDecimal(hour & 0x3F); // Mask AM/PM bit if in 12-hour mode
   day = bcdToDecimal(day);
   date = bcdToDecimal(date);
-  month = bcdToDecimal(month & 0x1F); // Mask century bit
+  month = bcdToDecimal(month);
+  month = month & 0x1F; // Mask century bit
   year = 2000 + bcdToDecimal(year);
 }
 
 void writeTimeToRTC() {
-// Init I2C if not already done
+  // Init I2C if not already done
   TWSR = 0;  // Prescaler value = 1
   TWBR = 72; // Set bit rate register (for 100kHz at 16MHz CPU)
-  //TWCR = (1 << TWEN);  // Enable TWI (I2C)
+  TWCR = (1 << TWEN);  // Enable TWI (I2C)
 
   startI2C();
   sendI2C((I2C_DS3231_ADDRESS << 1) | 0); // Write mode
@@ -56,7 +60,7 @@ void writeTimeToRTC() {
   sendI2C(decToBcd(hour));
   sendI2C(decToBcd(day)); // 1–7
   sendI2C(decToBcd(date));      // Day of month
-  sendI2C(decToBcd(month));     // Month
+  sendI2C(decToBcd(month)); // 1–12
   sendI2C(decToBcd(year % 100)); // Two-digit year
 
   stopI2C();
