@@ -22,19 +22,37 @@ void initRotaryEncoder() {
   sei(); // Enable global interrupts
 }
 
+void increasePos() {
+  pos++;
+  updateSelection(+1);
+}
+
+void decreasePos() {
+  pos--;
+  updateSelection(-1);
+}
+
+void pressButton() {
+  switchPressed = true;
+}
+
+void releaseButton() {
+  switchPressed = false;
+}
+
 ISR(INT0_vect) {
   // Rotary A changed
   if (PIND & (1 << PD2)) {
     if (PIND & (1 << PD3)) {
-      pos++;
+      increasePos();
     } else {
-      pos--;
+      decreasePos();
     }
   } else {
     if (PIND & (1 << PD3)) {
-      pos--;
+      decreasePos();
     } else {
-      pos++;
+      increasePos();
     }
   }
 }
@@ -46,8 +64,8 @@ ISR(INT1_vect) {
 ISR(PCINT2_vect) {
   // Check if switch is pressed (active LOW)
   if (!(PIND & (1 << PD4))) {
-    switchPressed = true;
+    pressButton();
   } else {
-    switchPressed = false;
+    releaseButton();
   }
 }

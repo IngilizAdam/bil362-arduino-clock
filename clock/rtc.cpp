@@ -38,7 +38,7 @@ void updateTime() {
   day = bcd_to_decimal(day);
   date = bcd_to_decimal(date);
   month = bcd_to_decimal(month & 0x1F); // Mask century bit
-  year = bcd_to_decimal(year);
+  year = 2000 + bcd_to_decimal(year);
 }
 
 uint8_t bcd_to_decimal(uint8_t bcd) {

@@ -2,7 +2,11 @@
 
 U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0);
 
+MENU_ITEM selectedItem;
+
 void initScreen() {
+  selectedItem = BLANK;
+
   u8g2.begin();
 
   u8g2.clearBuffer();
@@ -45,4 +49,10 @@ void updateSelection(uint8_t direction) {
   u8g2.clearBuffer();
   drawMainScreen();
 
+  if(direction > 0) {
+    selectedItem = static_cast<MENU_ITEM>(selectedItem + 1);
+  }
+  else {
+    selectedItem = static_cast<MENU_ITEM>(selectedItem - 1);
+  }
 }

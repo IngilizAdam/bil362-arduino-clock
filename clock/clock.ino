@@ -4,22 +4,38 @@
 #include "oled.h"
 #include "buzzer.h"
 #include "rotary_encoder.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+void mainLoop();
+
+volatile unsigned long uptime = 0;
+volatile unsigned long last100ms = 0;
+volatile unsigned long last1000ms = 0;
 
 void setup() {
-  Serial.begin(9600);
-
   initRotaryEncoder();
   initScreen();
 
   playMelody();
+
+  while(1){
+    mainLoop();
+  }
 }
 
-void loop() {
-  updateTime();
+void mainLoop() {
+  uptime = millis();
 
-  clearScreen();
-  drawMainScreen();
-  applyScreenBuffer();
+  if (uptime - last1000ms > 1000) {
+    last1000ms = uptime;
+    updateTime();
+  }
 
-  delay(1000);
+  if (uptime - last100ms > 100) {
+    last100ms = uptime;
+    clearScreen();
+    drawMainScreen();
+    applyScreenBuffer();
+  }
 }
