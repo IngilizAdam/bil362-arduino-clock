@@ -16,10 +16,10 @@ void setup() {
 
 void loop() {
   updateTime();
-  drawMainScreen();
 
-  Serial.println(switchPressed);
-  Serial.println(pos);
+  clearScreen();
+  drawMainScreen();
+  applyScreenBuffer();
 
   delay(1000);
 }

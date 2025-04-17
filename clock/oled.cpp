@@ -4,16 +4,22 @@ U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0);
 
 void initScreen() {
   u8g2.begin();
-  
+
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_ncenB08_tr);
   u8g2.drawStr(0, 24, "Hi there!");
   u8g2.sendBuffer();
 }
 
-void drawMainScreen() {
+void clearScreen() {
   u8g2.clearBuffer();
+}
 
+void applyScreenBuffer() {
+  u8g2.sendBuffer();
+}
+
+void drawMainScreen() {
   char timeStr[9];
   snprintf(timeStr, sizeof(timeStr), "%02d:%02d:%02d", hour, minute, second);
   u8g2.setFont(u8g2_font_ncenB12_tr);
@@ -29,10 +35,14 @@ void drawMainScreen() {
   uint8_t dateStrX = (128 - dateStrWidth) / 2;
   uint8_t dateStrY = 64 - u8g2.getAscent();
   u8g2.drawStr(dateStrX, dateStrY, dateStr);
-
-  u8g2.sendBuffer();
 }
 
 void drawAlarmScreen() {
+
+}
+
+void updateSelection(uint8_t direction) {
+  u8g2.clearBuffer();
+  drawMainScreen();
 
 }
