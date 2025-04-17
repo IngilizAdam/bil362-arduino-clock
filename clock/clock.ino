@@ -2,11 +2,13 @@
 #include "define.h"
 #include "rtc.h"
 #include "oled.h"
+#include "buzzer.h"
 
 void setup() {
   Serial.begin(9600);
 
   initScreen();
+  playMelody();
 }
 
 void loop() {
